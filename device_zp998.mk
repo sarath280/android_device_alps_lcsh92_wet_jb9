@@ -63,6 +63,7 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/root/init.mt6592.rc:root/init.mt6592.rc \
 	$(LOCAL_PATH)/root/init.modem.rc:root/init.modem.rc \
 	$(LOCAL_PATH)/root/init.protect.rc:root/init.protect.rc \
+	$(LOCAL_PATH)/root/init.recovery.mt6592.rc:root/init.recovery.mt6592.rc \
 	$(LOCAL_PATH)/root/init.mt6592.usb.rc:/root/init.mt6592.usb.rc
 
 # frameworks/native/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml
