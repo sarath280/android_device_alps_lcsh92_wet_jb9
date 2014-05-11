@@ -59,6 +59,8 @@ on fs
 on post-fs-data
     setprop vold.post_fs_data_done 1
 
+    insmod /system/lib/modules/mtk_wmt_detect.ko
+
     # create dalvik-cache and double-check the perms, so as to enforce our permissions
     mkdir /data/dalvik-cache 0771 system system
     chown system system /data/dalvik-cache
@@ -202,7 +204,7 @@ on post-fs-data
     mkdir /data/misc/ppp 0770 bluetooth net_bt
 
     # Android SEC related device nodes
-    insmod /system/lib/modules/sec.ko
+    #insmod /system/lib/modules/sec.ko
     exec /system/xbin/mknod /dev/sec c 182 0
     chmod 0660 /dev/sec
     chown root system /dev/sec
@@ -223,14 +225,14 @@ on post-fs-data
     chown system system /dev/ttyMT1
 
     # STP, WMT, GPS, FM and BT Driver
-    insmod /system/lib/modules/mtk_hif_sdio.ko
-    insmod /system/lib/modules/mtk_stp_wmt.ko
-    insmod /system/lib/modules/mtk_stp_uart.ko
-    insmod /system/lib/modules/mtk_stp_gps.ko
-    insmod /system/lib/modules/mtk_stp_bt.ko
+    #insmod /system/lib/modules/mtk_hif_sdio.ko
+    insmod /system/lib/modules/mtk_stp_wmt_soc.ko
+    #insmod /system/lib/modules/mtk_stp_uart.ko
+    insmod /system/lib/modules/mtk_stp_gps_soc.ko
+    insmod /system/lib/modules/mtk_stp_bt_soc.ko
     insmod /system/lib/modules/mtk_fm_drv.ko
     #insmod /system/lib/modules/mtk_fm_priv.ko
-    insmod /system/lib/modules/mtk_wmt_wifi.ko
+    insmod /system/lib/modules/mtk_wmt_wifi_soc.ko
 
     # Create char device file for WMT, GPS, BT, FM, WIFI
     exec /system/xbin/mknod /dev/stpwmt c 190 0
