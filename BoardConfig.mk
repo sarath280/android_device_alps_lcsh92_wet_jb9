@@ -1,71 +1,79 @@
-# Copyright (C) 2014 The CyanogenMod Project
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# inherit from the proprietary version
+-include vendor/alps/lcsh92_wet_jb9/BoardConfigVendor.mk
 
-DEVICE_FOLDER := device/zopo/zp998
-
--include vendor/zopo/zp998/BoardConfigVendor.mk
-
-# board
 TARGET_BOARD_PLATFORM := mt6592
 TARGET_ARCH := arm
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
+TARGET_CPU_VARIANT := cortex-a7
 TARGET_CPU_SMP := true
 TARGET_ARCH_VARIANT := armv7-a-neon
-TARGET_CPU_VARIANT := cortex-a7
+TARGET_KMODULES := true
+ARCH_ARM_HAVE_TLS_REGISTER := true
 
-# blob hacks
-COMMON_GLOBAL_CFLAGS += -DMR1_AUDIO_BLOB -DDISABLE_HW_ID_MATCH_CHECK -DNEEDS_VECTORIMPL_SYMBOLS
-BOARD_HAVE_PRE_KITKAT_AUDIO_BLOB := true
-
-# power
-TARGET_POWERHAL_VARIANT := cm
-
-# boot
+# bootloader
 TARGET_NO_BOOTLOADER := true
-BOARD_CUSTOM_BOOTIMG_MK := $(DEVICE_FOLDER)/boot.mk
-
-# EGL settings
-BOARD_EGL_CFG := ${DEVICE_FOLDER}/egl.cfg
-USE_OPENGL_RENDERER := true
-BOARD_EGL_WORKAROUND_BUG_10194508 := true
+TARGET_BOOTLOADER_BOARD_NAME := lcsh92_wet_jb9
+BOARD_CUSTOM_BOOTIMG_MK := boot.mk
+BOARD_KERNEL_CMDLINE := console=ttyMT0,921600n1 vmalloc=496M slub_max_order=0 lcm=1-nt35521_hd720_dsi_vdo_auo fps=6130 bootprof.pl_t=876 bootprof.lk_t=1166 printk.disable_uart=0 boot_reason=0
+BOARD_KERNEL_BASE := 0x10008000
+BOARD_KERNEL_PAGESIZE := 2048
 
 # kernel
-TARGET_PREBUILT_KERNEL := $(DEVICE_FOLDER)/prebuilt/kernel_6592
+TARGET_PREBUILT_KERNEL := device/alps/lcsh92_wet_jb9/kernel
+# TARGET_NO_FACTORYIMAGE := true
+BOARD_HAS_NO_SELECT_BUTTON := true
+USE_CAMERA_STUB := true
 
 # partition info
-BOARD_BOOTIMAGE_PARTITION_SIZE := 6291456
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1611661312
-BOARD_USERDATAIMAGE_PARTITION_SIZE:= 4830789632
-#BOARD_RECOVERYIMAGE_PARTITION_SIZE := 6291456
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 7208960
-BOARD_KERNEL_PAGESIZE := 2048
+# fix this up by examining /proc/emmc on a running device
+BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 838860800 # /dev/block/mmcblk0p5
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 6453985280 # /dev/block/mmcblk0p7
 BOARD_FLASH_BLOCK_SIZE := 512
+
+# eMMC support
+ifeq ($(MTK_EMMC_SUPPORT),yes)
 TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
+endif
 
-# recovery
-TARGET_RECOVERY_FSTAB := $(DEVICE_FOLDER)/root/fstab.mt6592
-TARGET_PREBUILT_RECOVERY_KERNEL := $(DEVICE_FOLDER)/recovery/kernel_6592
-BOARD_HAS_NO_SELECT_BUTTON := true
-BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_15x24.h\"
-TARGET_OTA_ASSERT_DEVICE := zp998,S1,ZP998,mt6592
-COMMON_GLOBAL_CFLAGS += -DRECOVERY_CANT_USE_CONFIG_EXT4_FS_XATTR
+# NAND page size
+ifeq ($(strip $(MTK_NAND_PAGE_SIZE)), 4K)
+  BOARD_NAND_PAGE_SIZE := 4096 -s 128
+else
+  BOARD_NAND_PAGE_SIZE := 2048 -s 64   # default 2K
+endif
 
-# wifi
+# aGPS / GPS
+ifeq ($(MTK_AGPS_APP), yes)
+   BOARD_AGPS_SUPL_LIBRARIES := true
+else
+   BOARD_AGPS_SUPL_LIBRARIES := false
+endif
+
+ifeq ($(MTK_GPS_SUPPORT), yes)
+  BOARD_GPS_LIBRARIES := true
+else
+  BOARD_GPS_LIBRARIES := false
+endif
+
+# WiFi
+ifeq ($(MTK_WLAN_SUPPORT), yes)
+BOARD_CONNECTIVITY_VENDOR := MediaTek
+BOARD_CONNECTIVITY_MODULE := conn_soc
 WPA_SUPPLICANT_VERSION := VER_0_8_X
+BOARD_HOSTAPD_DRIVER := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_mt66xx
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_mtk
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_mt66xx
+WIFI_DRIVER_FW_PATH_PARAM:="/dev/wmtWifi"
+WIFI_DRIVER_FW_PATH_STA:=STA
+WIFI_DRIVER_FW_PATH_AP:=AP
+WIFI_DRIVER_FW_PATH_P2P:=P2P
+MTK_WIFI_SUPPORT_HOTSPOT_MANAGER:=yes
+endif
 
-# telephony
-BOARD_RIL_CLASS := ../../../device/zopo/zp998/ril/
+# EGL
+BOARD_EGL_CFG := $(DEVICE_FOLDER)/egl.cfg
