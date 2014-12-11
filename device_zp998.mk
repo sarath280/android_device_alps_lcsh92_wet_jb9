@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$(call inherit-product-if-exists, vendor/zopo/zp998/zp998-vendor.mk)
+$(call inherit-product-if-exists, vendor/alps/lcsh92_wet_jb9/lcsh92_wet_jb9-vendor.mk)
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay/
 
