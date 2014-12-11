@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Inherit from those products. Most specific first.
-$(call inherit-product, device/zopo/zp998/device_zp998.mk)
+$(call inherit-product, device/alps/lcsh92_wet_jb9/device_lcsh92_wet_jb9.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 # Configure as xhdpi device to prevent breaking without mdpi drawables
@@ -21,7 +21,7 @@ PRODUCT_AAPT_CONFIG := normal mdpi hdpi xhdpi
 PRODUCT_AAPT_PREF_CONFIG := hdpi
 
 # Discard inherited values and use our own instead.
-PRODUCT_NAME := full_zp998
-PRODUCT_DEVICE := zp998
+PRODUCT_NAME := full_lcsh92_wet_jb9
+PRODUCT_DEVICE := lcsh92_wet_jb9
 PRODUCT_BRAND := Android
-PRODUCT_MODEL := ZP998
+PRODUCT_MODEL := lcsh92_wet_jb9
