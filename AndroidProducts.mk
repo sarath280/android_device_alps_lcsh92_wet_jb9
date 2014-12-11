@@ -1,2 +1,2 @@
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/full_zp998.mk
+    $(LOCAL_DIR)/device_lcsh92_wet_jb9.mk
